@@ -1,70 +1,64 @@
 {
   "Books": [
     {
-      "Title": "The Great Gatsby",
       "Author": "F. Scott Fitzgerald",
-      "Category": "Classic Literature",
-      "isRented": ""
+      "isRented": "",
+      "Title": "The Great Gatsby",
+      "Category": "Classic Literature"
     },
     {
-      "Title": "To Kill a Mockingbird",
       "Author": "Harper Lee",
-      "Category": "Classic Literature",
-      "isRented": ""
+      "isRented": "",
+      "Title": "To Kill a Mockingbird",
+      "Category": "Classic Literature"
     },
     {
+      "Author": "George Orwell",
+      "isRented": "",
       "Title": "1984",
-      "Author": "George Orwell",
-      "Category": "Dystopian",
-      "isRented": ""
+      "Category": "Dystopian"
     },
     {
-      "Title": "The Catcher in the Rye",
       "Author": "J.D. Salinger",
-      "Category": "Classic Literature",
-      "isRented": ""
+      "isRented": "",
+      "Title": "The Catcher in the Rye",
+      "Category": "Classic Literature"
     },
     {
-      "Title": "The Grapes of Wrath",
       "Author": "John Steinbeck",
-      "Category": "Classic Literature",
-      "isRented": ""
+      "isRented": "",
+      "Title": "The Grapes of Wrath",
+      "Category": "Classic Literature"
     },
     {
-      "Title": "Brave New World",
       "Author": "Aldous Huxley",
-      "Category": "Dystopian",
-      "isRented": ""
+      "isRented": "",
+      "Title": "Brave New World",
+      "Category": "Dystopian"
     },
     {
+      "Author": "J.R.R. Tolkien",
+      "isRented": "",
       "Title": "The Lord of the Rings",
-      "Author": "J.R.R. Tolkien",
-      "Category": "Fantasy",
-      "isRented": ""
+      "Category": "Fantasy"
     },
     {
-      "Title": "Animal Farm",
       "Author": "George Orwell",
-      "Category": "Political Satire",
-      "isRented": ""
+      "isRented": "",
+      "Title": "Animal Farm",
+      "Category": "Political Satire"
     },
     {
-      "Title": "The Hobbit",
       "Author": "J.R.R. Tolkien",
-      "Category": "Fantasy",
-      "isRented": ""
+      "isRented": "",
+      "Title": "The Hobbit",
+      "Category": "Fantasy"
     },
     {
-      "Title": "The Little Prince",
       "Author": "Antoine de Saint-Exupéry",
-      "Category": "Children's Literature",
-      "isRented": ""
-    },
-    {
-      "Title": "The aaaaaaaLittle Prince",
-      "Author": "Antoine aaaaaaade Saint-Exupéry",
-      "Category": "Children's Laaaaaaaaaiterature",
-      "isRented": "Pawel Polok"
+      "isRented": "",
+      "Title": "The Little Prince",
+      "Category": "Children's Literature"
     }
   ]
 }

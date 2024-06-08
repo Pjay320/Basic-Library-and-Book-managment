@@ -4,17 +4,35 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
 
+public interface IBookActions
+{
+    void Borrow(string borrower);
+    void Return();
+}
+public abstract class LibraryItem
+{
+    public string Title { get; set; }
+    public string Category { get; set; }
+}
 class BooksData
 {
     public List<Book> Books { get; set; }
 }
 
-sealed internal class Book
+public sealed class Book : LibraryItem, IBookActions
 {
-    public string Title { get; set; }
     public string Author { get; set; }
-    public string Category { get; set; }
     public string isRented { get; set; }
+
+    public void Borrow(string borrower)
+    {
+        isRented = borrower;
+    }
+
+    public void Return()
+    {
+        isRented = "";
+    }
 
     public override string ToString()
     {
