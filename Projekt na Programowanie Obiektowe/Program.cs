@@ -1,13 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 using System.Linq;
+
+class BooksData
+{
+    public List<Book> Books { get; set; }
+}
+
+internal class Book
+{
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public string Category { get; set; }
+    public string isRented { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Title} ({Category}) by {Author}";
+    }
+}
 
 class Program
 {
     static void Main(string[] args)
     {
-        Library library = new Library();
-        BookFactory bookFactory = new BookFactory();
+       
 
         while (true)
         {
@@ -21,26 +40,27 @@ class Program
             Console.WriteLine("7. Exit");
             Console.Write("Enter your choice: ");
             string choice = Console.ReadLine();
+            Console.Clear();
 
             switch (choice)
             {
                 case "1":
-                    AddBook(library, bookFactory);
+                    AddBook();
                     break;
                 case "2":
-                    RemoveBook(library);
+                    RemoveBook();
                     break;
                 case "3":
-                    BorrowBook(library);
+                    BorrowBook();
                     break;
                 case "4":
-                    ReturnBook(library);
+                    ReturnBook();
                     break;
                 case "5":
-                    SearchBook(library);
+                    SearchBook();
                     break;
                 case "6":
-                    library.DisplayBooks();
+                    DisplayBooks();
                     break;
                 case "7":
                     return;
@@ -51,211 +71,175 @@ class Program
         }
     }
 
-    static void AddBook(Library library, BookFactory bookFactory)
+    static void AddBook()
     {
-        Console.Write("Enter book title: ");
+        Console.Write("Enter the title of the book: ");
         string title = Console.ReadLine();
-        Console.Write("Enter book author: ");
+
+        Console.Write("Enter the author of the book: ");
         string author = Console.ReadLine();
-        Console.Write("Enter book category: ");
+
+        Console.Write("Enter the category of the book: ");
         string category = Console.ReadLine();
-        Book book = bookFactory.CreateBook(title, author, category);
-        library.AddBook(book);
+
+        Console.Write("Enter the rental status of the book (leave empty if available): ");
+        string isRented = Console.ReadLine();
+
+        Book newBook = new Book
+        {
+            Title = title,
+            Author = author,
+            Category = category,
+            isRented = isRented
+        };
+
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
+
+        data.Books.Add(newBook);
+
+        string updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText("../../../books.json", updatedJson);
+
         Console.WriteLine("Book added successfully.");
     }
-
-    static void RemoveBook(Library library)
+    static void RemoveBook()
     {
-        Console.Write("Enter book title to remove: ");
+        Console.Write("Enter the title of the book to remove: ");
         string title = Console.ReadLine();
-        Book book = library.SearchBook(title).FirstOrDefault();
-        if (book != null)
-        {
-            library.RemoveBook(book);
-            Console.WriteLine("Book removed successfully.");
-        }
-        else
-        {
-            Console.WriteLine("Book not found.");
-        }
-    }
 
-    static void BorrowBook(Library library)
-    {
-        Console.Write("Enter user name: ");
-        string userName = Console.ReadLine();
-        Console.Write("Enter user email: ");
-        string userEmail = Console.ReadLine();
-        User user = new User { Name = userName, Email = userEmail };
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
 
-        Console.Write("Enter book title to borrow: ");
-        string title = Console.ReadLine();
-        Book book = library.SearchBook(title).FirstOrDefault();
-        if (book != null)
-        {
-            library.BorrowBook(book, user);
-        }
-        else
-        {
-            Console.WriteLine("Book not found.");
-        }
-    }
+        Book bookToRemove = data.Books.FirstOrDefault(book => book.Title == title);
 
-    static void ReturnBook(Library library)
-    {
-        Console.Write("Enter user name: ");
-        string userName = Console.ReadLine();
-        Console.Write("Enter user email: ");
-        string userEmail = Console.ReadLine();
-        User user = new User { Name = userName, Email = userEmail };
+        if (bookToRemove != null)
+        {
+            Console.Write("Are you sure you want to remove this book? (yes/no): ");
+            string confirmation = Console.ReadLine();
 
-        Console.Write("Enter book title to return: ");
-        string title = Console.ReadLine();
-        Book book = library.SearchBook(title).FirstOrDefault();
-        if (book != null)
-        {
-            library.ReturnBook(book, user);
-        }
-        else
-        {
-            Console.WriteLine("Book not found.");
-        }
-    }
-
-    static void SearchBook(Library library)
-    {
-        Console.Write("Enter search criteria (title, author, category): ");
-        string criteria = Console.ReadLine();
-        List<Book> books = library.SearchBook(criteria);
-        if (books.Any())
-        {
-            Console.WriteLine("Books found:");
-            foreach (var book in books)
+            if (confirmation.ToLower() == "yes")
             {
-                Console.WriteLine($"- {book.Title} by {book.Author} (Category: {book.Category})");
+                data.Books.Remove(bookToRemove);
+
+                string updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText("../../../books.json", updatedJson);
+
+                Console.WriteLine("Book removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Book removal cancelled.");
             }
         }
         else
         {
-            Console.WriteLine("No books found.");
+            Console.WriteLine("Book not found.");
         }
     }
-}
-
-public class Book
-{
-    public string Title { get; set; }
-    public string Author { get; set; }
-    public string Category { get; set; }
-}
-
-public class User
-{
-    public string Name { get; set; }
-    public string Email { get; set; }
-}
-
-public interface IBookManagement
-{
-    void AddBook(Book book);
-    void RemoveBook(Book book);
-    void BorrowBook(Book book, User user);
-    void ReturnBook(Book book, User user);
-    List<Book> SearchBook(string criteria);
-}
-
-public class Library : IBookManagement
-{
-    private List<Book> books = new List<Book>();
-    private Dictionary<Book, User> borrowedBooks = new Dictionary<Book, User>();
-
-    public void AddBook(Book book)
+    static void BorrowBook()
     {
-        books.Add(book);
-    }
+        Console.Write("Enter the title of the book to borrow: ");
+        string title = Console.ReadLine();
 
-    public void RemoveBook(Book book)
-    {
-        books.Remove(book);
-    }
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
 
-    public void BorrowBook(Book book, User user)
-    {
-        if (books.Contains(book))
+        Book bookToBorrow = data.Books.FirstOrDefault(book => book.Title == title);
+
+        if (bookToBorrow != null)
         {
-            books.Remove(book);
-            borrowedBooks[book] = user;
-            Console.WriteLine($"{user.Name} borrowed {book.Title}");
-        }
-        else
-        {
-            Console.WriteLine("Book is not available");
-        }
-    }
-
-    public void ReturnBook(Book book, User user)
-    {
-        if (borrowedBooks.ContainsKey(book) && borrowedBooks[book] == user)
-        {
-            books.Add(book);
-            borrowedBooks.Remove(book);
-            Console.WriteLine($"{user.Name} returned {book.Title}");
-        }
-        else
-        {
-            Console.WriteLine($"{user.Name} did not borrow {book.Title}");
-        }
-    }
-
-    public List<Book> SearchBook(string criteria)
-    {
-        return books.Where(b => b.Title.Contains(criteria) || b.Author.Contains(criteria) || b.Category.Contains(criteria)).ToList();
-    }
-
-    public void DisplayBooks()
-    {
-        Console.WriteLine("Available books:");
-        foreach (var book in books)
-        {
-            Console.WriteLine($"- {book.Title} by {book.Author} (Category: {book.Category})");
-        }
-
-        Console.WriteLine("\nBorrowed books:");
-        foreach (var entry in borrowedBooks)
-        {
-            var book = entry.Key;
-            var user = entry.Value;
-            Console.WriteLine($"- {book.Title} by {book.Author} (Category: {book.Category}) borrowed by {user.Name}");
-        }
-    }
-}
-
-public sealed class DatabaseConnection
-{
-    private static DatabaseConnection instance = null;
-
-    private DatabaseConnection()
-    {
-    }
-
-    public static DatabaseConnection Instance
-    {
-        get
-        {
-            if (instance == null)
+            if (string.IsNullOrEmpty(bookToBorrow.isRented))
             {
-                instance = new DatabaseConnection();
+                Console.Write("Enter your name: ");
+                string renter = Console.ReadLine();
+
+                bookToBorrow.isRented = renter;
+
+                string updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText("../../../books.json", updatedJson);
+
+                Console.WriteLine("Book borrowed successfully.");
             }
-            return instance;
+            else
+            {
+                Console.WriteLine("This book is already rented.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Book not found.");
+        }
+    }
+    static void ReturnBook()
+    {
+        Console.Write("Enter the title of the book to return: ");
+        string title = Console.ReadLine();
+
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
+
+        Book bookToReturn = data.Books.FirstOrDefault(book => book.Title == title);
+
+        if (bookToReturn != null)
+        {
+            if (!string.IsNullOrEmpty(bookToReturn.isRented))
+            {
+                bookToReturn.isRented = "";
+
+                string updatedJson = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText("../../../books.json", updatedJson);
+
+                Console.WriteLine("Book returned successfully.");
+            }
+            else
+            {
+                Console.WriteLine("This book is not rented.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Book not found.");
+        }
+    }
+    static void SearchBook()
+    {
+        Console.Write("Enter the title of the book to search: ");
+        string title = Console.ReadLine();
+
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
+
+        Book bookToSearch = data.Books.FirstOrDefault(book => book.Title == title);
+
+        if (bookToSearch != null)
+        {
+            Console.WriteLine($"Found book: {bookToSearch}");
+        }
+        else
+        {
+            Console.WriteLine("Book not found.");
+        }
+    }
+    static void DisplayBooks()
+    {
+        Console.WriteLine("=========================================");
+        string json = File.ReadAllText("../../../books.json");
+        BooksData data = JsonConvert.DeserializeObject<BooksData>(json);
+
+        var availableBooks = data.Books.Where(book => string.IsNullOrEmpty(book.isRented)).ToList();
+        var rentedBooks = data.Books.Where(book => !string.IsNullOrEmpty(book.isRented)).ToList();
+
+        Console.WriteLine("\nAvailable Books:");
+        foreach (Book book in availableBooks)
+        {
+            Console.WriteLine(book);
+        }
+
+        Console.WriteLine("\nRented Books:");
+        foreach (Book book in rentedBooks)
+        {
+            Console.WriteLine($"{book.Title} ({book.Category}) by {book.Author} is Rented by {book.isRented}");
         }
     }
 }
-
-public class BookFactory
-{
-    public Book CreateBook(string title, string author, string category)
-    {
-        return new Book { Title = title, Author = author, Category = category };
-    }
-}
-// :)

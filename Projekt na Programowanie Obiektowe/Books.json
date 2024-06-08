@@ -1,0 +1,70 @@
+{
+  "Books": [
+    {
+      "Title": "The Great Gatsby",
+      "Author": "F. Scott Fitzgerald",
+      "Category": "Classic Literature",
+      "isRented": ""
+    },
+    {
+      "Title": "To Kill a Mockingbird",
+      "Author": "Harper Lee",
+      "Category": "Classic Literature",
+      "isRented": ""
+    },
+    {
+      "Title": "1984",
+      "Author": "George Orwell",
+      "Category": "Dystopian",
+      "isRented": ""
+    },
+    {
+      "Title": "The Catcher in the Rye",
+      "Author": "J.D. Salinger",
+      "Category": "Classic Literature",
+      "isRented": ""
+    },
+    {
+      "Title": "The Grapes of Wrath",
+      "Author": "John Steinbeck",
+      "Category": "Classic Literature",
+      "isRented": ""
+    },
+    {
+      "Title": "Brave New World",
+      "Author": "Aldous Huxley",
+      "Category": "Dystopian",
+      "isRented": ""
+    },
+    {
+      "Title": "The Lord of the Rings",
+      "Author": "J.R.R. Tolkien",
+      "Category": "Fantasy",
+      "isRented": ""
+    },
+    {
+      "Title": "Animal Farm",
+      "Author": "George Orwell",
+      "Category": "Political Satire",
+      "isRented": ""
+    },
+    {
+      "Title": "The Hobbit",
+      "Author": "J.R.R. Tolkien",
+      "Category": "Fantasy",
+      "isRented": ""
+    },
+    {
+      "Title": "The Little Prince",
+      "Author": "Antoine de Saint-Exupéry",
+      "Category": "Children's Literature",
+      "isRented": ""
+    },
+    {
+      "Title": "The aaaaaaaLittle Prince",
+      "Author": "Antoine aaaaaaade Saint-Exupéry",
+      "Category": "Children's Laaaaaaaaaiterature",
+      "isRented": "Pawel Polok"
+    }
+  ]
+}
