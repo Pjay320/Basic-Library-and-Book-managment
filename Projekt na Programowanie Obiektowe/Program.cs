@@ -9,7 +9,7 @@ class BooksData
     public List<Book> Books { get; set; }
 }
 
-internal class Book
+sealed internal class Book
 {
     public string Title { get; set; }
     public string Author { get; set; }
