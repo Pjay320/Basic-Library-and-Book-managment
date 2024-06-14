@@ -233,6 +233,14 @@ class Program
         if (bookToSearch != null)
         {
             Console.WriteLine($"Found book: {bookToSearch}");
+            if (string.IsNullOrEmpty(bookToSearch.isRented))
+            {
+                Console.WriteLine("The book is available.");
+            }
+            else
+            {
+                Console.WriteLine($"The book is rented by {bookToSearch.isRented}.");
+            }
         }
         else
         {
